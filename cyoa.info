@@ -1,0 +1,4 @@
+name = Choice your own adventure
+description = provides base functionality for cyoa. 
+package = Choice your own adventure
+core = 6.x

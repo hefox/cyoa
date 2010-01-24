@@ -1,0 +1,98 @@
+<?php
+
+
+function cyoa_install() {
+  drupal_install_schema('cyoa');
+}
+function cyoa_uninstall() {
+  drupal_uninstall_schema('cyoa');
+}
+
+
+function cyoa_schema() {
+  $schema['cyoa'] = array(
+    'description' => 'Stored adventures started.',
+    'fields' => array(
+      'cyoaid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique cyoa ID.',
+      ),
+     'uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "User's {users}.uid.",
+      ),
+      'hostname' => array(
+        'description' => 'Hostname of the visitor.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => ''
+      ),
+      'nid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "Node started on",
+      ),
+      'timestamp' => array(
+        'description' => 'Timestamp of the event.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0
+      ),
+      'completed' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => 'Whether the have reached an end.',
+      ),
+    ),
+    'primary key' => array('cyoaid'),
+  );
+ $schema['cyoac'] = array(
+    'description' => 'Create your own adventure choices.',
+    'fields' => array(
+      'cyoacid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique cyoa ID.',
+      ),
+     'cyoaid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "CYOA id.",
+      ),
+     'pcyoacid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "Parent/refering adventure.",
+      ),
+     'delta' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "current path (in case of divergence)",
+      ),
+     'nid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "Node choisen",
+      ),
+      'timestamp' => array(
+        'description' => 'Timestamp of the event.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0
+      ),
+    ),
+    'primary key' => array('cyoacid'),
+  );
+  return $schema;
+}

@@ -1,0 +1,132 @@
+<?php
+
+function current_cyoacid($in_cyoacid = NULL){
+  static $cyoacid = NULL;
+  if ($in_cyoacid) $cyoacid = $in_cyoacid;
+  return $cyoacid;
+}
+
+function cyoa_views_api() {
+  return array(
+    'api' => 2,
+    'path' => drupal_get_path('module', 'cyoa'),
+  );
+}
+
+/**
+ * Implementation of hook_init().
+ */
+function cyoa_init() {
+  global $user;
+  if ($_GET['cyoa_start'] && drupal_get_token($_GET['cyoa_nid'] . ' - ' . $_GET['cyoac_nid']) == $_GET['token']) {
+    //start a new enterally
+    $vals = 
+      array(
+        'uid'=>$user->uid,
+        'nid'=>$_GET['cyoa_nid'],
+        'hostname' => ip_address(),
+        'timestamp' => time(),
+      );
+    $inserted = drupal_write_record('cyoa',$vals);
+   if ($inserted) {
+     $vals = array(
+      'nid'=>$_GET['cyoac_nid'],
+      'cyoaid' =>  $vals['cyoaid'],
+      'timestamp' => time(),
+     );
+      $inserted = drupal_write_record('cyoac',$vals);
+      
+     current_cyoacid($vals['cyoacid']); // set for choice
+    }
+  } elseif ($_GET['cyoacid'] && $_GET['token']
+    &&  drupal_get_token($_GET['cyoacid'] . ' - ' . $_GET['cyoac_nid']) == $_GET['token']) 
+  {
+    if (db_result(db_query("SELECT 1 from {cyoac} where pcyoacid = %d",
+      $_GET['cyoacid']))) {
+      drupal_set_message("You have already followed this path");
+    } else {
+    $info =  db_fetch_object(db_query("SELECT * from {cyoac} where cyoacid=%d",$_GET['cyoacid']));
+      $vals = array(
+        'nid'=>$_GET['cyoac_nid'],
+        'cyoaid' =>  $info->cyoaid,
+        'timestamp' => time(),
+        'pcyoacid' => $_GET['cyoacid'],
+      );
+      drupal_write_record('cyoac',$vals);
+      current_cyoacid($vals['cyoacid']);
+    }
+  }
+ 
+}
+
+
+/**
+ * Implementation of hook_field_formatter_info().
+ */
+function cyoa_field_formatter_info() {
+  return array(
+    'cyoas' => array(
+      'label' => t('Start [cyoa]'),
+      'field types' => array('nodereference'),
+      'multiple values' => CONTENT_HANDLE_CORE,
+    ),
+    'cyoac' => array(
+      'label' => t('Continue [cyoa]'),
+      'field types' => array('nodereference'),
+      'multiple values' => CONTENT_HANDLE_CORE,
+    ),
+  );
+}
+
+
+
+/**
+ * Theme function for 'default' nodereference field formatter.
+ */
+function theme_cyoa_formatter_cyoas($element) {
+  $output = '';
+  static $choices;
+  if (!empty($element['#item']['nid']) && is_numeric($element['#item']['nid']) && ($title = _nodereference_titles($element['#item']['nid']))) {
+    $node = $element['#node'];
+    $query = '';
+    if ($node->nid) {
+      $token = drupal_get_token($node->nid . ' - ' . $element['#item']['nid']);
+      $query = array('cyoa_start'=>1, 'cyoa_nid'=>$node->nid, 'cyoac_nid'=> $element['#item']['nid'],'token'=>$token);
+    }
+    $output = l($title, 'node/'. $element['#item']['nid'],array('query'=>$query));
+  }
+  return $output;
+}
+function theme_cyoa_formatter_cyoac($element) {
+  $output = '';
+  if (!empty($element['#item']['nid']) && is_numeric($element['#item']['nid']) && ($title = _nodereference_titles($element['#item']['nid']))) {
+    $node = $element['#node'];
+    $query = '';
+    $cyoacid= current_cyoacid();
+    if ($cyoacid) {
+      if (!$choices[$cyoacid]) {
+        $choices[$cyoacid] = db_fetch_object(db_query("SELECT * from {cyoac} where cyoacid=%d",$cyoacid));
+      }
+      if ( $node->nid == $choices[$cyoacid]->nid) {
+        $token = drupal_get_token($cyoacid . ' - ' . $element['#item']['nid']);
+        $query = array('cyoacid'=> $cyoacid, 'cyoac_nid'=> $element['#item']['nid'],'token'=>$token);
+      }
+    }
+    $output = l($title, 'node/'. $element['#item']['nid'],array('query'=>$query));
+  }
+  return $output;
+}
+
+/**
+ * Implementation of hook_theme().
+ */
+function cyoa_theme() {
+  return array(
+    'cyoa_formatter_cyoac' => array(
+      'arguments' => array('element'),
+    ),
+    'cyoa_formatter_cyoas' => array(
+      'arguments' => array('element'),
+    ),
+  );
+}
