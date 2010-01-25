@@ -11,10 +11,10 @@ function _cyoaexample_content_default_fields() {
     'field_name' => 'field_body',
     'type_name' => 'adventure',
     'display_settings' => array(
-      'weight' => '34',
+      'weight' => '-3',
       'parent' => '',
       'label' => array(
-        'format' => 'above',
+        'format' => 'hidden',
       ),
       'teaser' => array(
         'format' => 'default',
@@ -55,7 +55,7 @@ function _cyoaexample_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Description',
-      'weight' => '-4',
+      'weight' => '-3',
       'description' => '',
       'type' => 'text_textarea',
       'module' => 'text',
@@ -67,7 +67,7 @@ function _cyoaexample_content_default_fields() {
     'field_name' => 'field_choice',
     'type_name' => 'adventure',
     'display_settings' => array(
-      'weight' => '32',
+      'weight' => '-2',
       'parent' => '',
       'label' => array(
         'format' => 'above',
@@ -98,7 +98,6 @@ function _cyoaexample_content_default_fields() {
     'referenceable_types' => array(
       'choice' => 'choice',
       'adventure' => 0,
-      'forum' => 0,
       'page' => 0,
       'panel' => 0,
       'story' => 0,
@@ -116,10 +115,63 @@ function _cyoaexample_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Choices',
-      'weight' => '-3',
+      'weight' => '-2',
       'description' => '',
       'type' => 'nodereference_autocomplete',
       'module' => 'nodereference',
+    ),
+  );
+
+  // Exported field: field_tags
+  $fields[] = array(
+    'field_name' => 'field_tags',
+    'type_name' => 'adventure',
+    'display_settings' => array(
+      'weight' => '-4',
+      'parent' => '',
+      'label' => array(
+        'format' => 'above',
+      ),
+      'teaser' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'full' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'content_taxonomy',
+    'required' => '0',
+    'multiple' => '1',
+    'module' => 'content_taxonomy',
+    'active' => '1',
+    'save_term_node' => 1,
+    'vid' => '2',
+    'parent' => '0',
+    'parent_php_code' => '',
+    'depth' => '',
+    'widget' => array(
+      'new_terms' => 'insert',
+      'extra_parent' => '0',
+      'maxlength' => '255',
+      'active_tags' => NULL,
+      'default_value' => NULL,
+      'default_value_php' => NULL,
+      'label' => 'tags',
+      'weight' => '-4',
+      'description' => '',
+      'type' => 'content_taxonomy_autocomplete',
+      'module' => 'content_taxonomy_autocomplete',
     ),
   );
 
@@ -131,7 +183,7 @@ function _cyoaexample_content_default_fields() {
       'weight' => '-3',
       'parent' => '',
       'label' => array(
-        'format' => 'above',
+        'format' => 'hidden',
       ),
       'teaser' => array(
         'format' => 'default',
@@ -214,7 +266,6 @@ function _cyoaexample_content_default_fields() {
     'referenceable_types' => array(
       'choice' => 'choice',
       'adventure' => 0,
-      'forum' => 0,
       'page' => 0,
       'panel' => 0,
       'story' => 0,
@@ -231,6 +282,15 @@ function _cyoaexample_content_default_fields() {
         ),
       ),
       'default_value_php' => NULL,
+      'rnrurl' => array(
+        'node_link' => array(
+          'teaser' => 0,
+          'full' => 1,
+          'title' => 'Add a choice',
+          'hover_title' => 'Add a new choice(possiblity) to this',
+          'destination' => 'node',
+        ),
+      ),
       'label' => 'Choices',
       'weight' => '-2',
       'description' => '',
@@ -243,6 +303,7 @@ function _cyoaexample_content_default_fields() {
   array(
     t('Choices'),
     t('Description'),
+    t('tags'),
   );
 
   return $fields;
