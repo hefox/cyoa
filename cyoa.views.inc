@@ -65,6 +65,18 @@ function cyoa_views_data() {
       'handler' => 'views_handler_filter_date',
     ),
   );
+  // Term name field
+  $data['cyoa']['hostname'] = array(
+    'title' => t('Hostname'),
+    'help' => t('Hostname'),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+      'help' => t('Current hostname'),
+    ),
+  );
 
   $data['node']['cyoa_nid'] = array(
     'group' => t('Cyoa'),
@@ -91,6 +103,15 @@ function cyoa_views_data() {
       'label' => t('Cyoa to user'),
     ),
   );
+  $data['cyoa']['uid_hostname'] = array(
+  'real field' => 'uid',
+    'title' => t('Current user or hostname '),
+    'help' => t('Filter by current username or hostname for annoymous.'),
+    'filter' => array(
+      'handler' => 'views_handler_filter_cyoa_uid_hostname',
+      'type' => 'yes-no',
+    ),
+  );  
   
   $data['cyoac']['table']['join'] = array(
     'node' => array(
@@ -184,4 +205,18 @@ function cyoa_views_data() {
     ),
   );
   return $data;
+}
+
+
+function cyoa_views_handlers() {
+  return array(
+    'info' => array(
+      'path' => drupal_get_path('module', 'cyoa') ,
+    ),
+    'handlers' => array(
+      'views_handler_filter_cyoa_uid_hostname' => array(
+        'parent' => 'views_handler_filter_boolean_operator',
+      ),
+    )
+  );
 }

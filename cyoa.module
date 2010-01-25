@@ -1,9 +1,9 @@
 <?php
 
-function current_cyoacid($in_cyoacid = NULL){
-  static $cyoacid = NULL;
-  if ($in_cyoacid) $cyoacid = $in_cyoacid;
-  return $cyoacid;
+function current_cyoacid($in_cyoac = NULL){
+  static $cyoac = NULL;
+  if ($in_cyoac) $cyoac = $in_cyoac;
+  return $cyoac;
 }
 
 function cyoa_views_api() {
@@ -35,8 +35,8 @@ function cyoa_init() {
       'timestamp' => time(),
      );
       $inserted = drupal_write_record('cyoac',$vals);
-      
-     current_cyoacid($vals['cyoacid']); // set for choice
+      $vals = (object )$vals;
+     current_cyoacid($vals); // set for choice
     }
   } elseif ($_GET['cyoacid'] && $_GET['token']
     &&  drupal_get_token($_GET['cyoacid'] . ' - ' . $_GET['cyoac_nid']) == $_GET['token']) 
@@ -53,7 +53,8 @@ function cyoa_init() {
         'pcyoacid' => $_GET['cyoacid'],
       );
       drupal_write_record('cyoac',$vals);
-      current_cyoacid($vals['cyoacid']);
+      $vals = (object )$vals;
+      current_cyoacid($vals);
     }
   }
  
@@ -102,8 +103,10 @@ function theme_cyoa_formatter_cyoac($element) {
   if (!empty($element['#item']['nid']) && is_numeric($element['#item']['nid']) && ($title = _nodereference_titles($element['#item']['nid']))) {
     $node = $element['#node'];
     $query = '';
-    $cyoacid= current_cyoacid();
-    if ($cyoacid) {
+    $cyoac= current_cyoacid();
+    
+    if ($cyoac) {
+      $cyoacid = $cyoac->cyoacid;
       if (!$choices[$cyoacid]) {
         $choices[$cyoacid] = db_fetch_object(db_query("SELECT * from {cyoac} where cyoacid=%d",$cyoacid));
       }
