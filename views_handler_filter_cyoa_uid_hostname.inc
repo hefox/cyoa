@@ -11,9 +11,10 @@ class views_handler_filter_cyoa_uid_hostname extends views_handler_filter_boolea
 
   function query() {
     $this->ensure_my_table();
-    $where = "$this->table_alias.$this->real_field ";
+    
     global $user;
     if ($user->uid) {
+     $where = "$this->table_alias.$this->real_field ";
       if (empty($this->value)) {
         $where .= '!= ***CURRENT_USER***';
       }
