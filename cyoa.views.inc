@@ -1,5 +1,9 @@
 <?php
 
+
+/**
+ * Implementation of hook_views_data().
+ */
 function cyoa_views_data() {
   $data = array();
   $data['cyoa']['table']['group']  = t('Cyoa');
@@ -27,7 +31,7 @@ function cyoa_views_data() {
     ),
   );
 
-  /*
+  /* //FIXME Completed is not in use yet. 
   $data['cyoa']['completed'] = array(
     'title'=> t('Completed'),
     'help' => t('Whether or not the adventure has been completed.'),
@@ -45,12 +49,17 @@ function cyoa_views_data() {
     ),
   );
   */
+    /* auto join the cyoa table with the cyoac table */
     $data['cyoa']['table']['join'] = array(
     'cyoac' => array(
       'left_field' => 'cyoaid',
       'field' => 'cyoaid',
     ),
   ); 
+  
+  /*
+   * Date adventure started
+   */
   $data['cyoa']['timestamp'] = array(
     'title' => t('Date started'), // The item it appears as on the UI,
     'help' => t('The date the adventure started.'), // The help that appears on the UI,
@@ -65,7 +74,9 @@ function cyoa_views_data() {
       'handler' => 'views_handler_filter_date',
     ),
   );
-  // Term name field
+  /*
+   * Hostname // FIXME TODO convert this to session_id?
+   */
   $data['cyoa']['hostname'] = array(
     'title' => t('Hostname'),
     'help' => t('Hostname'),
@@ -78,6 +89,9 @@ function cyoa_views_data() {
     ),
   );
 
+  /*
+   *  cyoa_nid
+   */
   $data['node']['cyoa_nid'] = array(
     'group' => t('Cyoa'),
     'title' => t('Cyoa node'),
@@ -106,7 +120,7 @@ function cyoa_views_data() {
   $data['cyoa']['uid_hostname'] = array(
   'real field' => 'uid',
     'title' => t('Current user or hostname '),
-    'help' => t('Filter by current username or hostname for annoymous.'),
+    'help' => t('Filter by current username or hostname .'),
     'filter' => array(
       'handler' => 'views_handler_filter_cyoa_uid_hostname',
       'type' => 'yes-no',
@@ -208,6 +222,9 @@ function cyoa_views_data() {
 }
 
 
+/**
+ * Implementation of hook_views_data().
+ */
 function cyoa_views_handlers() {
   return array(
     'info' => array(

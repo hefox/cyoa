@@ -1,11 +1,19 @@
 <?php
 
+
+/*
+ * Because I hate globals // FIXME
+ */
 function current_cyoacid($in_cyoac = NULL){
   static $cyoac = NULL;
   if ($in_cyoac) $cyoac = $in_cyoac;
   return $cyoac;
 }
 
+
+/*
+ * Implementation of hook_views_api
+ */
 function cyoa_views_api() {
   return array(
     'api' => 2,
@@ -82,7 +90,7 @@ function cyoa_field_formatter_info() {
 
 
 /**
- * Theme function for 'default' nodereference field formatter.
+ * Theme function for starting nodereference field formatter; this is how someone starts their adventure.
  */
 function theme_cyoa_formatter_cyoas($element) {
   $output = '';
@@ -98,6 +106,10 @@ function theme_cyoa_formatter_cyoas($element) {
   }
   return $output;
 }
+
+/*
+ * Formatter for 'continueing' the adventure
+ */
 function theme_cyoa_formatter_cyoac($element) {
   $output = '';
   if (!empty($element['#item']['nid']) && is_numeric($element['#item']['nid']) && ($title = _nodereference_titles($element['#item']['nid']))) {

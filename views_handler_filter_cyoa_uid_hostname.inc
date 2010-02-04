@@ -1,7 +1,7 @@
 <?php
 
 /**
- 
+ * FIXME the logic is still a bit wonky atm here
  */
 class views_handler_filter_cyoa_uid_hostname extends views_handler_filter_boolean_operator {
   function construct() {
@@ -23,11 +23,12 @@ class views_handler_filter_cyoa_uid_hostname extends views_handler_filter_boolea
       }
       $this->query->add_where($this->options['group'], $where);    
     } else {
+      $where = "$this->table_alias.";
       if (empty($this->value)) {
          $where .= 'hostname != "%s"';
       }
       else {
-        $where .= 'hostname = "%s"';
+        $where .= 'hostname = "%s" AND ' . "$this->table_alias.$this->real_field = 0";
       }  
       $this->query->add_where($this->options['group'], $where, ip_address());    
     }
