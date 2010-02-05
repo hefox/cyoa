@@ -102,7 +102,7 @@ function theme_cyoa_formatter_cyoas($element) {
       $token = drupal_get_token($node->nid . ' - ' . $element['#item']['nid']);
       $query = array('cyoa_start'=>1, 'cyoa_nid'=>$node->nid, 'cyoac_nid'=> $element['#item']['nid'],'token'=>$token);
     }
-    $output = l($title, 'node/'. $element['#item']['nid'],array('query'=>$query));
+    $output = l($title, 'node/'. $element['#item']['nid'],array('query'=>$query, 'attributes'=> array('rel' =>'nofollow')));
   }
   return $output;
 }
@@ -127,7 +127,7 @@ function theme_cyoa_formatter_cyoac($element) {
         $query = array('cyoacid'=> $cyoacid, 'cyoac_nid'=> $element['#item']['nid'],'token'=>$token);
       }
     }
-    $output = l($title, 'node/'. $element['#item']['nid'],array('query'=>$query));
+    $output = l($title, 'node/'. $element['#item']['nid'],array('query'=>$query,'attributes'=>array('rel'=>'nofollow')));
   }
   return $output;
 }
